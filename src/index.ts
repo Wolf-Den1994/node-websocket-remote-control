@@ -4,6 +4,8 @@ import { WebSocketServer } from 'ws';
 import { httpServer } from './http_server/index';
 import 'dotenv/config';
 import { drawCircle } from './modules/circle';
+import { drawSquare } from './modules/square';
+import { speed } from './utils/constants';
 
 const HTTP_PORT = process.env.PORT || 3000;
 
@@ -17,22 +19,23 @@ try {
     ws.on('message', (data) => {
       const [event, value] = data.toString().split(' ');
       const { x, y } = robot.getMousePos();
+      const rightValue = +value;
 
       switch (event) {
         case 'mouse_right':
-          robot.moveMouse(x + +value, y);
+          robot.moveMouse(x + rightValue, y);
           break;
 
         case 'mouse_left':
-          robot.moveMouse(x - +value, y);
+          robot.moveMouse(x - rightValue, y);
           break;
 
         case 'mouse_up':
-          robot.moveMouse(x, y - +value);
+          robot.moveMouse(x, y - rightValue);
           break;
 
         case 'mouse_down':
-          robot.moveMouse(x, y + +value);
+          robot.moveMouse(x, y + rightValue);
           break;
 
         case 'mouse_position':
@@ -42,7 +45,14 @@ try {
         case 'draw_circle':
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawCircle(x, y, value);
+          drawCircle(x, y, rightValue);
+          robot.mouseToggle('up');
+          break;
+
+        case 'draw_square':
+          robot.mouseClick('left');
+          robot.mouseToggle('down');
+          drawSquare(x, y, rightValue, speed);
           robot.mouseToggle('up');
           break;
 

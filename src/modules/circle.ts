@@ -21,15 +21,15 @@ const Mathutils = {
   },
 };
 
-export const drawCircle = (x: number, y: number, value: string) => {
+export const drawCircle = (x: number, y: number, radius: number) => {
   let coordinateX = x;
   let coordinateY = y;
 
   const updatePosition = (deg: number) => {
     const fig = Mathutils.map(deg, 0, 360, 0, 6.3);
-    coordinateX = Math.floor(x + (+value * Math.cos(fig)));
-    coordinateY = Math.floor(y + (+value * Math.sin(fig)));
-    robot.moveMouseSmooth(coordinateX - +value, coordinateY);
+    coordinateX = Math.floor(x + (radius * Math.cos(fig)));
+    coordinateY = Math.floor(y + (radius * Math.sin(fig)));
+    robot.moveMouseSmooth(coordinateX - radius, coordinateY);
   };
 
   for (let i = 1; i < 361; i += 1) {
