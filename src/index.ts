@@ -3,8 +3,7 @@ import robot from 'robotjs';
 import { WebSocketServer } from 'ws';
 import { httpServer } from './http_server/index';
 import 'dotenv/config';
-import { drawCircle } from './modules/circle';
-import { drawSquare } from './modules/square';
+import { drawSquare, drawCircle, drawRectangular } from './modules';
 import { speed } from './utils/constants';
 
 const HTTP_PORT = process.env.PORT || 3000;
@@ -17,25 +16,26 @@ const wss = new WebSocketServer({ port: 8080 });
 try {
   wss.on('connection', (ws) => {
     ws.on('message', (data) => {
-      const [event, value] = data.toString().split(' ');
+      const [event, firstResponseValue, secondResponseValue] = data.toString().split(' ');
       const { x, y } = robot.getMousePos();
-      const rightValue = +value;
+      const value = +firstResponseValue;
+      const height = +secondResponseValue;
 
       switch (event) {
         case 'mouse_right':
-          robot.moveMouse(x + rightValue, y);
+          robot.moveMouse(x + value, y);
           break;
 
         case 'mouse_left':
-          robot.moveMouse(x - rightValue, y);
+          robot.moveMouse(x - value, y);
           break;
 
         case 'mouse_up':
-          robot.moveMouse(x, y - rightValue);
+          robot.moveMouse(x, y - value);
           break;
 
         case 'mouse_down':
-          robot.moveMouse(x, y + rightValue);
+          robot.moveMouse(x, y + value);
           break;
 
         case 'mouse_position':
@@ -45,14 +45,21 @@ try {
         case 'draw_circle':
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawCircle(x, y, rightValue);
+          drawCircle(x, y, value);
           robot.mouseToggle('up');
           break;
 
         case 'draw_square':
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawSquare(x, y, rightValue, speed);
+          drawSquare(x, y, value, speed);
+          robot.mouseToggle('up');
+          break;
+
+        case 'draw_rectangle':
+          robot.mouseClick('left');
+          robot.mouseToggle('down');
+          drawRectangular(x, y, value, height, speed);
           robot.mouseToggle('up');
           break;
 
