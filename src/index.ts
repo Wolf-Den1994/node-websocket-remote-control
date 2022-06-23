@@ -1,9 +1,10 @@
-// import Jimp from 'jimp';
 import robot from 'robotjs';
 import { WebSocketServer } from 'ws';
 import { httpServer } from './http_server/index';
 import 'dotenv/config';
-import { drawSquare, drawCircle, drawRectangular } from './modules';
+import {
+  drawSquare, drawCircle, drawRectangular, getScreenshot,
+} from './modules';
 import { speed } from './utils/constants';
 
 const HTTP_PORT = process.env.PORT || 3000;
@@ -15,7 +16,7 @@ const wss = new WebSocketServer({ port: 8080 });
 
 try {
   wss.on('connection', (ws) => {
-    ws.on('message', (data) => {
+    ws.on('message', async (data) => {
       const [event, firstResponseValue, secondResponseValue] = data.toString().split(' ');
       const { x, y } = robot.getMousePos();
       const value = +firstResponseValue;
@@ -63,11 +64,17 @@ try {
           robot.mouseToggle('up');
           break;
 
+        case 'prnt_scrn': {
+          const pngBuf = await getScreenshot(x, y);
+          ws.send(`prnt_scrn ${pngBuf}`);
+          break;
+        }
+
         default:
           break;
       }
 
-      console.log('xyz', data.toString(), '|', x, y);
+      console.log(`Message: ${data.toString()} | Coordinates: x: ${x}, y: ${y}`);
     });
 
     ws.send('something');
