@@ -32,52 +32,68 @@ try {
       const value = +firstResponseValue;
       const height = +secondResponseValue;
 
+      if (event !== 'mouse_position' && event !== 'prnt_scrn') wsStrem.write(data);
+
+      console.log('Received:', data);
+
       switch (event) {
         case 'mouse_right':
           robot.moveMouse(x + value, y);
+          console.log('Result:', event, 'completed successfully!');
           break;
 
         case 'mouse_left':
           robot.moveMouse(x - value, y);
+          console.log('Result:', event, 'completed successfully!');
           break;
 
         case 'mouse_up':
           robot.moveMouse(x, y - value);
+          console.log('Result:', event, 'completed successfully!');
           break;
 
         case 'mouse_down':
           robot.moveMouse(x, y + value);
+          console.log('Result:', event, 'completed successfully!');
           break;
 
         case 'mouse_position':
-          wsStrem.write(`mouse_position ${x},${y}`);
+          wsStrem.write(`mouse_position ${x},${y}\0`);
+          console.log('Result:', event, `${x},${y}`, 'completed successfully!');
           break;
 
         case 'draw_circle':
+          console.log('Result: start drawing circle');
           robot.mouseClick('left');
           robot.mouseToggle('down');
           drawCircle(x, y, value);
           robot.mouseToggle('up');
+          console.log('Result: finish drawing circle,', event, 'completed successfully!');
           break;
 
         case 'draw_square':
+          console.log('Result: start drawing square');
           robot.mouseClick('left');
           robot.mouseToggle('down');
           drawSquare(x, y, value, speed);
           robot.mouseToggle('up');
+          console.log('Result: finish drawing square,', event, 'completed successfully!');
           break;
 
         case 'draw_rectangle':
+          console.log('Result: start drawing rectangle');
           robot.mouseClick('left');
           robot.mouseToggle('down');
           drawRectangular(x, y, value, height, speed);
           robot.mouseToggle('up');
+          console.log('Result: finish drawing rectangle,', event, 'completed successfully!');
           break;
 
         case 'prnt_scrn': {
           try {
             const pngBuf = await getScreenshot(x, y);
-            wsStrem.write(`prnt_scrn ${pngBuf}`);
+            wsStrem.write(`prnt_scrn ${pngBuf}\0`);
+            console.log('Result:', event, 'completed successfully!');
           } catch (error) {
             console.error('Error:', error);
           }
