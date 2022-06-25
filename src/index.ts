@@ -123,7 +123,7 @@ try {
 }
 
 process.on('SIGINT', () => {
-  process.stdout.write(`Websocket has been closed!${EOL}`);
+  console.log('Websocket has been closed!');
   wss.close();
   process.exit();
 });
