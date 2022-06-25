@@ -1,6 +1,6 @@
 import robot from 'robotjs';
 import { EOL } from 'os';
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, createWebSocketStream } from 'ws';
 import { httpServer } from './http_server/index';
 import 'dotenv/config';
 import {
@@ -23,7 +23,10 @@ try {
   });
 
   wss.on('connection', (ws) => {
-    ws.on('message', async (data) => {
+    const wsStrem = createWebSocketStream(ws, { encoding: 'utf-8', decodeStrings: false });
+
+    wsStrem.on('data', async (chunk) => {
+      const data = chunk.toString();
       const [event, firstResponseValue, secondResponseValue] = data.toString().split(' ');
       const { x, y } = robot.getMousePos();
       const value = +firstResponseValue;
@@ -47,7 +50,7 @@ try {
           break;
 
         case 'mouse_position':
-          ws.send(`mouse_position ${x},${y}`);
+          wsStrem.write(`mouse_position ${x},${y}`);
           break;
 
         case 'draw_circle':
@@ -74,7 +77,7 @@ try {
         case 'prnt_scrn': {
           try {
             const pngBuf = await getScreenshot(x, y);
-            ws.send(`prnt_scrn ${pngBuf}`);
+            wsStrem.write(`prnt_scrn ${pngBuf}`);
           } catch (error) {
             console.error('Error:', error);
           }
@@ -84,19 +87,20 @@ try {
         default:
           break;
       }
+    })
+      .on('error', (error) => {
+        console.log('webSocketStream has Error:', error);
+      })
+      .on('close', () => wsStrem.end());
 
-      console.log(`Message: ${data.toString()} | Coordinates: x: ${x}, y: ${y}`);
+    wss.on('close', () => {
+      console.log('WebSocketServer closed!');
+      wsStrem.end();
     });
 
-    ws.send('something');
-  });
-
-  wss.on('close', () => {
-    console.log('WebSocketServer closed!');
-  });
-
-  wss.on('error', (error) => {
-    console.log('WebSocketServer has Error:', error);
+    wss.on('error', (error) => {
+      console.log('WebSocketServer has Error:', error);
+    });
   });
 } catch (error) {
   console.log('Interval Error:', error);

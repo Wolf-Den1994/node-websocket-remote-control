@@ -4,9 +4,8 @@
     "description": "Template for the WebSocket remote control task",
     "main": "index.js",
     "scripts": {
-        "start": "node ./src/index.js",
+        "start": "cross-env NODE_ENV=production tsc && node dist/index.js",
         "start:dev": "nodemon",
-        "start:prod": "cross-env NODE_ENV=production tsc && node dist/index.js",
         "lint": "eslint \"src/**/*.{ts,js}\"",
         "lintfix": "npm run lint -- --fix"
     },
