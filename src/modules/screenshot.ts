@@ -6,11 +6,11 @@ export const getScreenshot = async (x: number, y: number) => {
 
   for (let i = 0; i < bmp.image.length; i += 4) {
     if (i % 4 === 0) {
-      [bmp.image[i], bmp.image[i + 2]] = [bmp.image[i + 2], bmp.image[i]]; // bgr -> rgb color
+      [bmp.image[i], bmp.image[i + 2]] = [bmp.image[i + 2], bmp.image[i]];
     }
   }
 
-  const imageJimp = new Jimp({ data: bmp.image, width: 200, height: 200 }, (err: any, image: any) => {
+  const imageJimp = new Jimp({ data: bmp.image, width: bmp.width, height: bmp.height }, (err: any, image: any) => {
     if (err) throw err;
     return image;
   });

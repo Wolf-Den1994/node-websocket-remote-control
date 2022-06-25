@@ -72,8 +72,12 @@ try {
           break;
 
         case 'prnt_scrn': {
-          const pngBuf = await getScreenshot(x, y);
-          ws.send(`prnt_scrn ${pngBuf}`);
+          try {
+            const pngBuf = await getScreenshot(x, y);
+            ws.send(`prnt_scrn ${pngBuf}`);
+          } catch (error) {
+            console.error('Error:', error);
+          }
           break;
         }
 
