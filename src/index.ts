@@ -32,7 +32,7 @@ try {
       const value = +firstResponseValue;
       const height = +secondResponseValue;
 
-      if (event !== 'mouse_position' && event !== 'prnt_scrn') wsStrem.write(data);
+      if (event !== 'mouse_position' && event !== 'prnt_scrn') wsStrem.write(`${data}\0`);
 
       console.log('Received:', data);
 
@@ -121,3 +121,9 @@ try {
 } catch (error) {
   console.log('Interval Error:', error);
 }
+
+process.on('SIGINT', () => {
+  process.stdout.write(`Websocket has been closed!${EOL}`);
+  wss.close();
+  process.exit();
+});
