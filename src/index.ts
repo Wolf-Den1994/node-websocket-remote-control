@@ -1,4 +1,5 @@
 import robot from 'robotjs';
+import { EOL } from 'os';
 import { WebSocketServer } from 'ws';
 import { httpServer } from './http_server/index';
 import 'dotenv/config';
@@ -15,6 +16,12 @@ httpServer.listen(HTTP_PORT);
 const wss = new WebSocketServer({ port: 8080 });
 
 try {
+  wss.on('headers', (headers, request) => {
+    const firstPart = `${headers[2]}!${EOL}`;
+    const secondPart = `${request.rawHeaders[0]}: ${request.rawHeaders[1]} with front: ${request.rawHeaders[13]}`;
+    console.log(`${firstPart}Websocket has been started on ${secondPart}`);
+  });
+
   wss.on('connection', (ws) => {
     ws.on('message', async (data) => {
       const [event, firstResponseValue, secondResponseValue] = data.toString().split(' ');
