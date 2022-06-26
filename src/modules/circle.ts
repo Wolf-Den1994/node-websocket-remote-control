@@ -29,7 +29,7 @@ export const drawCircle = (x: number, y: number, radius: number) => {
     const fig = Mathutils.map(deg, 0, 360, 0, 6.3);
     coordinateX = Math.floor(x + (radius * Math.cos(fig)));
     coordinateY = Math.floor(y + (radius * Math.sin(fig)));
-    robot.moveMouseSmooth(coordinateX - radius, coordinateY);
+    robot.moveMouse(coordinateX - radius, coordinateY);
   };
 
   for (let i = 1; i < 361; i += 1) {

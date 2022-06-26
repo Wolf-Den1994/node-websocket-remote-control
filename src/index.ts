@@ -6,7 +6,6 @@ import 'dotenv/config';
 import {
   drawSquare, drawCircle, drawRectangular, getScreenshot,
 } from './modules';
-import { speed } from './utils/constants';
 
 const HTTP_PORT = process.env.PORT || 3000;
 
@@ -75,7 +74,7 @@ try {
           console.log('Result: start drawing square');
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawSquare(x, y, value, speed);
+          drawSquare(x, y, value);
           robot.mouseToggle('up');
           console.log('Result: finish drawing square,', event, 'completed successfully!');
           break;
@@ -84,7 +83,7 @@ try {
           console.log('Result: start drawing rectangle');
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawRectangular(x, y, value, height, speed);
+          drawRectangular(x, y, value, height);
           robot.mouseToggle('up');
           console.log('Result: finish drawing rectangle,', event, 'completed successfully!');
           break;
