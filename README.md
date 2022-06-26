@@ -7,7 +7,9 @@
 1. Clone/download repo
 2. `npm install`
 3. Choose `develop` branch
-4. Change name file `.env.copy` to `.env` 
+4. Change name file `.env.copy` to `.env`
+
+**Note**: It's working only for main display. Don't try to use it for your another display.
 
 ## Usage
 **Development**

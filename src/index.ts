@@ -7,6 +7,7 @@ import {
   drawSquare, drawCircle, drawRectangular, getScreenshot,
 } from './modules';
 
+const speed = 24;
 const HTTP_PORT = process.env.PORT || 3000;
 
 console.log(`Start static http server on the ${HTTP_PORT} port!`);
@@ -74,7 +75,7 @@ try {
           console.log('Result: start drawing square');
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawSquare(x, y, value);
+          drawSquare(x, y, value, speed);
           robot.mouseToggle('up');
           console.log('Result: finish drawing square,', event, 'completed successfully!');
           break;
@@ -83,7 +84,7 @@ try {
           console.log('Result: start drawing rectangle');
           robot.mouseClick('left');
           robot.mouseToggle('down');
-          drawRectangular(x, y, value, height);
+          drawRectangular(x, y, value, height, speed);
           robot.mouseToggle('up');
           console.log('Result: finish drawing rectangle,', event, 'completed successfully!');
           break;
